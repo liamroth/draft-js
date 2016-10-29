@@ -238,8 +238,16 @@ const DraftModifier = {
     selectionState: SelectionState,
     blockType: DraftBlockType,
   ): ContentState {
-    return modifyBlockForContentState(contentState, selectionState, block =>
-      block.merge({type: blockType, depth: 0}),
+    return modifyBlockForContentState(
+      contentState,
+      selectionState,
+      (block) => {
+        var depth = blockType === 'unordered-list-item' || blockType === 'ordered-list-item'
+                      ? block.getDepth()
+                      : 0;
+
+        return block.merge({ type: blockType, depth: depth });
+      }
     );
   },
 
