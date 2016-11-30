@@ -138,7 +138,7 @@ class DraftEditorBlock extends React.Component {
           <DraftEditorLeaf
             key={offsetKey}
             offsetKey={offsetKey}
-            blockKey={blockKey}
+            block={block}
             start={start}
             selection={hasSelection ? this.props.selection : undefined}
             forceSelection={this.props.forceSelection}
