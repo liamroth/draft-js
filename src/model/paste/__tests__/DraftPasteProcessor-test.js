@@ -101,6 +101,32 @@ test('must identify overlapping inline styles', () => {
   `);
 });
 
+it('must suppress blocks nested inside other blocks', function() {
+  var html = '<h2><p>Some text here</p> more text here </h2>';
+  var {contentBlocks: output} = DraftPasteProcessor.processHTML(html, CUSTOM_BLOCK_MAP);
+  assertBlockTypes(output, [
+    'header-two',
+  ]);
+});
+
+it('must not suppress blocks nested inside unstyled blocks', function() {
+  var html = '<div><h2>Some text here</h2> more text here </div>';
+  var {contentBlocks: output} = DraftPasteProcessor.processHTML(html, CUSTOM_BLOCK_MAP);
+  assertBlockTypes(output, [
+    'header-two',
+    'unstyled',
+  ]);
+});
+
+it('must detect two touching blocks', function() {
+  var html = '<h1>hi</h1>    <h2>hi</h2>';
+  var output = DraftPasteProcessor.processHTML(html, CUSTOM_BLOCK_MAP);
+  assertBlockTypes(output, [
+    'header-one',
+    'header-two',
+  ]);
+});
+
 test('must identify block styles', () => {
   assertDraftPasteProcessorProcessHTML(`
     <ol>
@@ -184,6 +210,22 @@ test('must NOT treat divs as Ps when we pave Ps', () => {
       <p>hello</p>
     </div>
   `);
+});
+
+it('must treat divs that do not contain Ps as Ps when we have Ps elsewhere', function() {
+  var html = '<p>hi</p><div>hello</div><div>hola</div>';
+  var {contentBlocks: output} = DraftPasteProcessor.processHTML(html, CUSTOM_BLOCK_MAP);
+  assertBlockTypes(output, [
+    'paragraph',
+    'unstyled',
+    'unstyled',
+  ]);
+});
+
+it('must replace br tags with soft newlines', function() {
+  var html = 'hi<br>hello';
+  var output = DraftPasteProcessor.processHTML(html, CUSTOM_BLOCK_MAP);
+  expect(output[0].getText()).toBe('hi\nhello');
 });
 
 test('must replace br tags with soft newlines', () => {

@@ -123,7 +123,6 @@ const getListBlockType = (tag: string, lastList: ?string): ?DraftBlockType => {
 const getBlockMapSupportedTags = (
   blockRenderMap: DraftBlockRenderMap,
 ): Array<string> => {
-  const unstyledElement = blockRenderMap.get('unstyled').element;
   let tags = Set([]);
 
   blockRenderMap.forEach((draftBlock: DraftBlockRenderConfig) => {
@@ -137,7 +136,6 @@ const getBlockMapSupportedTags = (
   });
 
   return tags
-    .filter(tag => tag && tag !== unstyledElement)
     .toArray()
     .sort();
 };
@@ -483,7 +481,8 @@ const genFragment = (
   const blockType = getBlockTypeForTag(nodeName, lastList, blockRenderMap);
   const inListBlock = lastList && inBlock === 'li' && nodeName === 'li';
   const inBlockOrHasNestedBlocks =
-    (!inBlock || experimentalTreeDataSupport) &&
+    (!inBlock || experimentalTreeDataSupport ||
+    getBlockTypeForTag(inBlock, lastList, blockRenderMap) === 'unstyled') &&
     blockTags.indexOf(nodeName) !== -1;
 
   // Block Tags
