@@ -393,10 +393,6 @@ const genFragment = (
     if (nodeTextContent === '' && inBlock !== 'pre') {
       return {chunk: getWhitespaceChunk(inEntity), entityMap};
     }
-    if (inBlock !== 'pre') {
-      // Can't use empty string because MSWord
-      text = text.replace(REGEX_LF, SPACE);
-    }
 
     // save the last block so we can use it later
     lastBlock = nodeName;
