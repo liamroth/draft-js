@@ -320,10 +320,6 @@ function genFragment(
     if (text.trim() === '' && inBlock !== 'pre') {
       return getWhitespaceChunk(inEntity);
     }
-    if (inBlock !== 'pre') {
-      // Can't use empty string because MSWord
-      text = text.replace(REGEX_LF, SPACE);
-    }
 
     // save the last block so we can use it later
     lastBlock = nodeName;
