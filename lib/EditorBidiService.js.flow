@@ -6,25 +6,25 @@
  * LICENSE file in the root directory of this source tree. An additional grant
  * of patent rights can be found in the PATENTS file in the same directory.
  *
- * @providesModule EditorBidiService
- * @typechecks
+ * @format
  * @flow
+ * @emails oncall+draft_js
  */
 
 'use strict';
 
-var Immutable = require('immutable');
-var UnicodeBidiService = require('fbjs/lib/UnicodeBidiService');
-
-var nullthrows = require('fbjs/lib/nullthrows');
-
 import type ContentState from './ContentState';
 
-var { OrderedMap } = Immutable;
+const Immutable = require('immutable');
+const UnicodeBidiService = require('fbjs/lib/UnicodeBidiService');
 
-var bidiService;
+const nullthrows = require('fbjs/lib/nullthrows');
 
-var EditorBidiService = {
+const { OrderedMap } = Immutable;
+
+let bidiService;
+
+const EditorBidiService = {
   getDirectionMap: function (content: ContentState, prevBidiMap: ?OrderedMap<any, any>): OrderedMap<any, any> {
     if (!bidiService) {
       bidiService = new UnicodeBidiService();
@@ -32,9 +32,9 @@ var EditorBidiService = {
       bidiService.reset();
     }
 
-    var blockMap = content.getBlockMap();
-    var nextBidi = blockMap.valueSeq().map(block => nullthrows(bidiService).getDirection(block.getText()));
-    var bidiMap = OrderedMap(blockMap.keySeq().zip(nextBidi));
+    const blockMap = content.getBlockMap();
+    const nextBidi = blockMap.valueSeq().map(block => nullthrows(bidiService).getDirection(block.getText()));
+    const bidiMap = OrderedMap(blockMap.keySeq().zip(nextBidi));
 
     if (prevBidiMap != null && Immutable.is(prevBidiMap, bidiMap)) {
       return prevBidiMap;

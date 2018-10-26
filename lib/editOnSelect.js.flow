@@ -6,25 +6,43 @@
  * LICENSE file in the root directory of this source tree. An additional grant
  * of patent rights can be found in the PATENTS file in the same directory.
  *
- * @providesModule editOnSelect
- * @flow
+ * @format
+ * @flow strict-local
+ * @emails oncall+draft_js
  */
 
 'use strict';
 
-var EditorState = require('./EditorState');
-var ReactDOM = require('react-dom');
+import type DraftEditor from './DraftEditor.react';
 
-var getDraftEditorSelection = require('./getDraftEditorSelection');
+const DraftJsDebugLogging = require('./DraftJsDebugLogging');
+const EditorState = require('./EditorState');
+const ReactDOM = require('react-dom');
 
-function editOnSelect(): void {
-  if (this._blockSelectEvents) {
+const getDraftEditorSelection = require('./getDraftEditorSelection');
+const invariant = require('fbjs/lib/invariant');
+
+function editOnSelect(editor: DraftEditor): void {
+  if (editor._blockSelectEvents || editor._latestEditorState !== editor.props.editorState) {
+    if (editor._blockSelectEvents) {
+      const editorState = editor.props.editorState;
+      const selectionState = editorState.getSelection();
+      DraftJsDebugLogging.logBlockedSelectionEvent({
+        // For now I don't think we need any other info
+        anonymizedDom: 'N/A',
+        extraParams: JSON.stringify({ stacktrace: new Error().stack }),
+        selectionState: JSON.stringify(selectionState.toJS())
+      });
+    }
     return;
   }
 
-  var editorState = this.props.editorState;
-  var documentSelection = getDraftEditorSelection(editorState, ReactDOM.findDOMNode(this.refs.editorContainer).firstChild);
-  var updatedSelectionState = documentSelection.selectionState;
+  let editorState = editor.props.editorState;
+  const editorNode = ReactDOM.findDOMNode(editor.editorContainer);
+  invariant(editorNode, 'Missing editorNode');
+  invariant(editorNode.firstChild instanceof HTMLElement, 'editorNode.firstChild is not an HTMLElement');
+  const documentSelection = getDraftEditorSelection(editorState, editorNode.firstChild);
+  const updatedSelectionState = documentSelection.selectionState;
 
   if (updatedSelectionState !== editorState.getSelection()) {
     if (documentSelection.needsRecovery) {
@@ -32,7 +50,7 @@ function editOnSelect(): void {
     } else {
       editorState = EditorState.acceptSelection(editorState, updatedSelectionState);
     }
-    this.update(editorState);
+    editor.update(editorState);
   }
 }
 

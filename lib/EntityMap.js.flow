@@ -6,16 +6,16 @@
  * LICENSE file in the root directory of this source tree. An additional grant
  * of patent rights can be found in the PATENTS file in the same directory.
  *
- * @providesModule ComposedEntityType
- * @flow
+ * @format
+ * @flow strict-local
+ * @emails oncall+draft_js
  */
 
 'use strict';
 
-var ComposedEntityType = {
-  'LINK': true,
-  'TOKEN': true,
-  'PHOTO': true
-};
+import type { DraftEntityMapObject } from './DraftEntity';
 
-module.exports = ComposedEntityType;
+// TODO: when removing the deprecated Entity api
+// change this to be
+// OrderedMap<string, DraftEntityInstance>;
+export type EntityMap = DraftEntityMapObject;
