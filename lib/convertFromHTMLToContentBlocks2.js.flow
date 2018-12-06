@@ -371,7 +371,7 @@ class ContentBlocksBuilder {
           blockType = this.disambiguate(nodeName, this.wrapper) || blockType[0] || 'unstyled';
         }
 
-        if (!experimentalTreeDataSupport && node instanceof HTMLElement && (blockType === 'unordered-list-item' || blockType === 'ordered-list-item')) {
+        if (!experimentalTreeDataSupport && node instanceof HTMLElement && (blockType === 'unordered-list-item' || blockType === 'ordered-list-item' || blockType === 'checkbox-list-item')) {
           this.currentDepth = getListItemDepth(node, this.currentDepth);
         }
 

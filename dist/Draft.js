@@ -722,15 +722,8 @@ module.exports = EditorState;
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/*
-object-assign
-(c) Sindre Sorhus
-@license MIT
-*/
-
 
 /* eslint-disable no-unused-vars */
-var getOwnPropertySymbols = Object.getOwnPropertySymbols;
 var hasOwnProperty = Object.prototype.hasOwnProperty;
 var propIsEnumerable = Object.prototype.propertyIsEnumerable;
 
@@ -751,7 +744,7 @@ function shouldUseNative() {
 		// Detect buggy property enumeration order in older V8 versions.
 
 		// https://bugs.chromium.org/p/v8/issues/detail?id=4118
-		var test1 = new String('abc');  // eslint-disable-line no-new-wrappers
+		var test1 = new String('abc');  // eslint-disable-line
 		test1[5] = 'de';
 		if (Object.getOwnPropertyNames(test1)[0] === '5') {
 			return false;
@@ -780,7 +773,7 @@ function shouldUseNative() {
 		}
 
 		return true;
-	} catch (err) {
+	} catch (e) {
 		// We don't expect any of the above to throw, but better to be safe.
 		return false;
 	}
@@ -800,8 +793,8 @@ module.exports = shouldUseNative() ? Object.assign : function (target, source) {
 			}
 		}
 
-		if (getOwnPropertySymbols) {
-			symbols = getOwnPropertySymbols(from);
+		if (Object.getOwnPropertySymbols) {
+			symbols = Object.getOwnPropertySymbols(from);
 			for (var i = 0; i < symbols.length; i++) {
 				if (propIsEnumerable.call(from, symbols[i])) {
 					to[symbols[i]] = from[symbols[i]];
@@ -956,7 +949,7 @@ var DraftModifier = {
 
   setBlockType: function setBlockType(contentState, selectionState, blockType) {
     return modifyBlockForContentState(contentState, selectionState, function (block) {
-      var depth = blockType === 'unordered-list-item' || blockType === 'ordered-list-item' ? block.getDepth() : 0;
+      var depth = blockType === 'unordered-list-item' || blockType === 'ordered-list-item' || blockType === 'checkbox-list-item' ? block.getDepth() : 0;
 
       return block.merge({ type: blockType, depth: depth });
     });
@@ -2894,6 +2887,10 @@ var DefaultDraftBlockRenderMap = Map({
     wrapper: LIST_WRAP
   },
   'ordered-list-item': {
+    element: 'li',
+    wrapper: LIST_WRAP
+  },
+  'checkbox-list-item': {
     element: 'li',
     wrapper: LIST_WRAP
   },
@@ -6985,7 +6982,7 @@ var ContentBlocksBuilder = function () {
           blockType = this.disambiguate(nodeName, this.wrapper) || blockType[0] || 'unstyled';
         }
 
-        if (!experimentalTreeDataSupport && node instanceof HTMLElement && (blockType === 'unordered-list-item' || blockType === 'ordered-list-item')) {
+        if (!experimentalTreeDataSupport && node instanceof HTMLElement && (blockType === 'unordered-list-item' || blockType === 'ordered-list-item' || blockType === 'checkbox-list-item')) {
           this.currentDepth = getListItemDepth(node, this.currentDepth);
         }
 
@@ -9207,7 +9204,7 @@ var splitBlockInContentState = function splitBlockInContentState(contentState, s
 
   if (!text) {
     var blockType = blockToSplit.getType();
-    if (blockType === 'unordered-list-item' || blockType === 'ordered-list-item') {
+    if (blockType === 'unordered-list-item' || blockType === 'ordered-list-item' || blockType === 'checkbox-list-item') {
       return modifyBlockForContentState(contentState, selectionState, function (block) {
         return block.merge({ type: 'unstyled', depth: 0 });
       });
@@ -17625,7 +17622,7 @@ var isListBlock = function isListBlock(block) {
   }
   var type = block.type;
 
-  return type === 'unordered-list-item' || type === 'ordered-list-item';
+  return type === 'unordered-list-item' || type === 'ordered-list-item' || type === 'checkbox-list-item';
 };
 
 var addDepthToChildren = function addDepthToChildren(block) {

@@ -51,6 +51,10 @@ const DefaultDraftBlockRenderMap: DefaultCoreDraftBlockRenderMap = Map({
     element: 'li',
     wrapper: LIST_WRAP
   },
+  'checkbox-list-item': {
+    element: 'li',
+    wrapper: LIST_WRAP
+  },
   blockquote: {
     element: 'blockquote'
   },
