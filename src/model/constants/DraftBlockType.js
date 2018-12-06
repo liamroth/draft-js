@@ -27,6 +27,7 @@ export type CoreDraftBlockType =
   | 'header-six'
   | 'unordered-list-item'
   | 'ordered-list-item'
+  | 'checkbox-list-item'
   | 'blockquote'
   | 'code-block'
   | 'atomic';

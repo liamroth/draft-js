@@ -43,7 +43,8 @@ const isListBlock = (block?: RawDraftContentBlock): boolean => {
     return false;
   }
   const {type} = block;
-  return type === 'unordered-list-item' || type === 'ordered-list-item';
+  return type === 'unordered-list-item' || type === 'ordered-list-item' ||
+    type === 'checkbox-list-item' ;
 };
 
 const addDepthToChildren = (block: RawDraftContentBlock) => {

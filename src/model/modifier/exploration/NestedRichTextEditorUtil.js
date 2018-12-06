@@ -476,8 +476,9 @@ const NestedRichTextEditorUtil: RichTextUtils = {
       const depth = block.getDepth();
       if (type !== 'unstyled') {
         if (
-          (type === 'unordered-list-item' || type === 'ordered-list-item') &&
-          depth > 0
+          (type === 'unordered-list-item' || type === 'ordered-list-item' ||
+            type === 'checkbox-list-item') &&
+              depth > 0
         ) {
           let newBlockMap = onUntab(content.getBlockMap(), block);
           newBlockMap = newBlockMap.set(

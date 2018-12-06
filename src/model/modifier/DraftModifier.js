@@ -242,7 +242,8 @@ const DraftModifier = {
       contentState,
       selectionState,
       (block) => {
-        var depth = blockType === 'unordered-list-item' || blockType === 'ordered-list-item'
+        var depth = blockType === 'unordered-list-item' || blockType === 'ordered-list-item' ||
+          blockType === 'checkbox-list-item'
                       ? block.getDepth()
                       : 0;
 
