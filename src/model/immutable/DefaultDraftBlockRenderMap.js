@@ -26,8 +26,6 @@ type DefaultCoreDraftBlockRenderMap = Map<
   DraftBlockRenderConfig,
 >;
 
-const UL_WRAP = <ul className={cx('public/DraftStyleDefault/ul')} />;
-const OL_WRAP = <ol className={cx('public/DraftStyleDefault/ol')} />;
 const PRE_WRAP = <pre className={cx('public/DraftStyleDefault/pre')} />;
 
 const DefaultDraftBlockRenderMap: DefaultCoreDraftBlockRenderMap = Map({
@@ -51,11 +49,11 @@ const DefaultDraftBlockRenderMap: DefaultCoreDraftBlockRenderMap = Map({
   },
   'unordered-list-item': {
     element: 'li',
-    wrapper: UL_WRAP,
+    wrapper: LIST_WRAP,
   },
   'ordered-list-item': {
     element: 'li',
-    wrapper: OL_WRAP,
+    wrapper: LIST_WRAP,
   },
   blockquote: {
     element: 'blockquote',

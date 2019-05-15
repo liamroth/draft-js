@@ -123,7 +123,6 @@ const getListBlockType = (tag: string, lastList: ?string): ?DraftBlockType => {
 const getBlockMapSupportedTags = (
   blockRenderMap: DraftBlockRenderMap,
 ): Array<string> => {
-  const unstyledElement = blockRenderMap.get('unstyled').element;
   let tags = Set([]);
 
   blockRenderMap.forEach((draftBlock: DraftBlockRenderConfig) => {
@@ -395,10 +394,6 @@ const genFragment = (
     if (nodeTextContent === '' && inBlock !== 'pre') {
       return {chunk: getWhitespaceChunk(inEntity), entityMap};
     }
-    if (inBlock !== 'pre') {
-      // Can't use empty string because MSWord
-      text = text.replace(REGEX_LF, SPACE);
-    }
 
     // save the last block so we can use it later
     lastBlock = nodeName;
@@ -484,6 +479,10 @@ const genFragment = (
   if (inListBlock || inBlockOrHasNestedBlocks) {
     chunk = getBlockDividerChunk(blockType, depth, parentKey);
     blockKey = chunk.blocks[0].key;
+        getBlockTypeForTag(inBlock, lastList, blockRenderMap) === 'unstyled'
+      ) &&
+      blockTags.indexOf(nodeName) !== -1
+    ) {
     inBlock = nodeName;
     newBlock = !experimentalTreeDataSupport;
   }

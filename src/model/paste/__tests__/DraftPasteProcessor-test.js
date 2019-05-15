@@ -134,6 +134,10 @@ test('must collapse nested blocks to the topmost level', () => {
  *   ]);
  * });
  */
+      'header-two',
+      'unstyled',
+    ]);
+  });
 
 test('must detect two touching blocks', () => {
   assertDraftPasteProcessorProcessHTML(`
@@ -177,6 +181,16 @@ test('must treat divs as Ps when we do not have semantic markup', () => {
     <div>hi</div>
     <div>hello</div>
   `);
+    ]);
+  });
+
+  it('must treat divs that do not contain Ps as Ps when we have Ps elsewhere', function() {
+    var html = '<p>hi</p><div>hello</div><div>hola</div>';
+    var {contentBlocks: output} = DraftPasteProcessor.processHTML(html, CUSTOM_BLOCK_MAP);
+    assertBlockTypes(output, [
+      'paragraph',
+      'unstyled',
+      'unstyled',
 });
 
 test('must NOT treat divs as Ps when we pave Ps', () => {
